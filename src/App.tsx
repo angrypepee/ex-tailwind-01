@@ -1,15 +1,18 @@
 // src/App.js
 
 import { useState } from 'react';
+import banner from './assets/img/3d-casual.png' //gambar banner kosong
+import profle from './assets/img/profile.png' // gambar profile
+
 
 function App() {
-  const [chores, setChores] = useState<{ text: string; completed: boolean }[]>([]);
+  const [chores, setChores] = useState<{ text: string; completed: boolean, timestamp: Date}[]>([]);
   const [inputValue, setInputValue] = useState<string>('');
 
   //menambah chore
   const addChore = () => {
     if (inputValue.trim()) {
-      setChores([...chores, { text: inputValue, completed: false }]);
+      setChores([...chores, { text: inputValue, completed: false, timestamp: new Date() }]);
       setInputValue('');
     }
   };
@@ -34,13 +37,28 @@ function App() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white rounded-lg shadow-lg p-4 w-full max-w-md">
-        <h1 className="text-xl text-center font-bold mb-4 card">Chore To-Do List</h1>
 
-        {totalChores === 0 ? (
+        <div className='flex mb-3'>
+          <div>
+            <img className='pr-4' src= {profle} width={70} height={70} alt='profile'/>
+          </div>
+          <div>
+            <h1 className="text-xl font-bold mb-0 card">Hai, Fellas!!</h1>
+            <p>What is your plan today.</p>
+          </div>
           
-          <p className="text-gray-500 text-center mb-4">No tasks available. Please add a chore.</p>
+        </div>
+
+        <hr />
+
+        
+        {totalChores === 0 ? (
+          <div className='flex flex-col items-center p-4'>
+            <img src= {banner} width={240} alt='banner'/>
+            <p className="text-gray-500 text-center mb-4">No tasks available. Please add a chore.</p>
+          </div>
         ) : (
-          <ul className="list-disc mb-4">
+          <ul className="list-disc m-2">
           {chores.map((chore, index) => (
             <li key={index} className="flex justify-between items-center mb-2">
               <div className="flex items-center">
@@ -50,9 +68,15 @@ function App() {
                   onChange={() => toggleChoreCompletion(index)}
                   className="mr-2"
                 />
-                <span className={chore.completed ? 'line-through text-gray-500' : ''}>
-                  {chore.text}
-                </span>
+                <div className='flex flex-col'>
+                  <span className="text-gray-400 text-xs">
+                      {chore.timestamp.toLocaleString()} {/* Format the timestamp */}
+                  </span>
+                  <span className={chore.completed ? 'line-through text-gray-500' : ''}>
+                    {chore.text}
+                  </span>
+                </div>
+                
               </div>
               <button
                 onClick={() => removeChore(index)}
@@ -98,12 +122,12 @@ function App() {
           </button>
         </div>
         
-
         <div className="mt-4">
-          <p className="font-medium">
+          <p className="text-sm">
             Total Chores: {totalChores} | Completed: {completedChores}
           </p>
         </div>
+        
       </div>
     </div>
   );
